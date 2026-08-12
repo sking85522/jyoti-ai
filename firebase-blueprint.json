@@ -1,0 +1,53 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User profile, instructions and preferences",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 100 },
+        "customInstructions": { "type": "string", "maxLength": 2000 },
+        "preferredLang": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string" }
+      }
+    },
+    "ChatThread": {
+      "title": "Chat Thread",
+      "description": "A conversation thread owned by a user",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["title", "userId", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "Chat Message",
+      "description": "A message within a chat thread",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "ai"] },
+        "content": { "type": "string", "maxLength": 50000 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["role", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/profile/{docId}": {
+      "schema": "UserProfile",
+      "description": "User profile document containing preferences and custom instructions"
+    },
+    "/users/{userId}/chats/{chatId}": {
+      "schema": "ChatThread",
+      "description": "Collection of chat threads for a user"
+    },
+    "/users/{userId}/chats/{chatId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Messages within a specific chat thread"
+    }
+  }
+}

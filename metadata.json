@@ -1,0 +1,11 @@
+{
+  "name": "Jyoti AI",
+  "description": "An AI assistant application with text processing, image analysis, and interactive features.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
