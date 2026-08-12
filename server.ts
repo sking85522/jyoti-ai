@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
+import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Modality } from '@google/genai';
 import { WebSocketServer } from 'ws';
@@ -156,6 +157,13 @@ async function startServer() {
       appType: "spa",
     });
     app.use(vite.middlewares);
+  } else {
+    const distPath = path.join(process.cwd(), "dist");
+    app.use(express.static(distPath));
+
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
