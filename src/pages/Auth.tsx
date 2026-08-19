@@ -33,7 +33,7 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-[#050510] flex items-center justify-center p-4 text-[#00ffcc] font-sans">
-      <div className="w-full max-w-md bg-[#0a0a1a] p-8 rounded-2xl border border-[#00ffcc]/30 shadow-[0_0_30px_rgba(0,255,204,0.1)]">
+      <div className="w-full max-w-md bg-[#0a0a1a] p-6 sm:p-8 rounded-2xl border border-[#00ffcc]/30 shadow-[0_0_30px_rgba(0,255,204,0.1)]">
         <div className="flex justify-center mb-6">
           <div className="w-16 h-16 rounded-2xl bg-[#00ffcc]/10 flex items-center justify-center border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.2)]">
             <Bot size={32} className="text-[#00ffcc]" />

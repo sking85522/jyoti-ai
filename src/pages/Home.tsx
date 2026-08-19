@@ -43,7 +43,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-bold tracking-tight text-white max-w-4xl leading-tight"
+            className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white max-w-4xl leading-tight px-2"
           >
             Your Intelligent <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ffcc] to-[#ff00ff]">Companion</span>
           </motion.h1>
@@ -52,7 +52,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-xl text-gray-400 max-w-2xl"
+            className="text-base md:text-lg lg:text-xl text-gray-400 max-w-2xl px-4"
           >
             Experience lightning-fast responses, advanced code generation, and intelligent text extraction from images and PDFs, all powered by our next-gen AI model.
           </motion.p>
