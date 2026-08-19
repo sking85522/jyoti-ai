@@ -1252,13 +1252,23 @@ Text to use:
       {/* SIDEBAR FOR CHAT HISTORY */}
       <AnimatePresence mode="wait">
         {isSidebarOpen && (
-          <motion.aside
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: 280, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="h-full bg-[#070714] border-r border-[#00ffcc]/20 flex flex-col z-30 shrink-0 select-none shadow-[2px_0_15px_rgba(0,0,0,0.5)]"
-          >
+          <>
+            {/* Mobile Backdrop Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"
+            />
+
+            <motion.aside
+              initial={{ x: -280, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -280, opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="fixed md:relative top-0 left-0 h-full w-[280px] bg-[#070714] border-r border-[#00ffcc]/20 flex flex-col z-50 shrink-0 select-none shadow-[2px_0_15px_rgba(0,0,0,0.5)]"
+            >
             {/* Sidebar Header */}
             <div className="p-4 border-b border-[#00ffcc]/20 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -1278,7 +1288,12 @@ Text to use:
             {/* New Chat Button */}
             <div className="p-3">
               <button
-                onClick={handleNewChat}
+                onClick={() => {
+                  handleNewChat();
+                  if (window.innerWidth < 768) {
+                    setIsSidebarOpen(false);
+                  }
+                }}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#00ffcc]/10 hover:bg-[#00ffcc]/20 border border-[#00ffcc]/40 text-[#00ffcc] font-medium text-sm transition-all duration-300 shadow-[0_0_12px_rgba(0,255,204,0.15)] group"
               >
                 <Plus size={18} className="group-hover:rotate-90 transition-transform duration-300" />
@@ -1323,7 +1338,12 @@ Text to use:
                   return (
                     <div
                       key={chat.id}
-                      onClick={() => setCurrentChatId(chat.id)}
+                      onClick={() => {
+                        setCurrentChatId(chat.id);
+                        if (window.innerWidth < 768) {
+                          setIsSidebarOpen(false);
+                        }
+                      }}
                       className={`group relative flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs cursor-pointer transition-all duration-200 ${
                         isActive 
                           ? 'bg-[#12122b] border border-[#00ffcc]/50 text-[#00ffcc] shadow-[0_0_10px_rgba(0,255,204,0.12)] font-medium' 
@@ -1418,6 +1438,7 @@ Text to use:
               </div>
             </div>
           </motion.aside>
+          </>
         )}
       </AnimatePresence>
 
@@ -1737,7 +1758,7 @@ Based on my score, please provide a brief analysis of my performance, my experie
               </div>
             )}
 
-            <div className="flex items-end gap-2 bg-[#111122] border border-[#00ffcc]/50 focus-within:border-[#ff00ff] focus-within:shadow-[0_0_15px_rgba(255,0,255,0.3)] rounded-[32px] p-2 transition-all duration-300 relative">
+            <div className="flex items-end gap-1.5 sm:gap-2 bg-[#111122] border border-[#00ffcc]/50 focus-within:border-[#ff00ff] focus-within:shadow-[0_0_15px_rgba(255,0,255,0.3)] rounded-[32px] p-1.5 sm:p-2 transition-all duration-300 relative">
               
               <input
                 type="file"
@@ -1747,45 +1768,47 @@ Based on my score, please provide a brief analysis of my performance, my experie
                 onChange={handleFileUpload}
               />
               
-              <button 
-                onClick={() => docInputRef.current?.click()}
-                className="p-3 opacity-70 hover:opacity-100 rounded-full transition-colors shrink-0"
-                title="फ़ाइल या चित्र संलग्न करें (Text & Images)"
-              >
-                <Paperclip size={20} />
-              </button>
+              <div className="flex items-center gap-0.5 sm:gap-1 shrink-0 pb-0.5 sm:pb-0">
+                <button
+                  onClick={() => docInputRef.current?.click()}
+                  className="p-2 sm:p-3 opacity-70 hover:opacity-100 rounded-full transition-colors shrink-0"
+                  title="फ़ाइल या चित्र संलग्न करें (Text & Images)"
+                >
+                  <Paperclip size={18} className="sm:w-5 sm:h-5" />
+                </button>
 
-              {/* Speech Recognition Mic Button for Voice Input */}
-              <button 
-                onClick={toggleMicListening}
-                className={`p-3 rounded-full transition-all shrink-0 relative ${
-                  isMicListening 
-                    ? 'bg-red-500 text-white animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.6)]' 
-                    : 'bg-[#00ffcc]/10 text-[#00ffcc] hover:bg-[#00ffcc]/20 border border-[#00ffcc]/30'
-                }`}
-                title={isMicListening ? "सुन रहे हैं... बंद करने के लिए क्लिक करें" : "बोलकर टाइप करें (Voice Input)"}
-              >
-                {isMicListening ? <MicOff size={20} /> : <Mic size={20} />}
-                {isMicListening && (
-                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                  </span>
-                )}
-              </button>
+                {/* Speech Recognition Mic Button for Voice Input */}
+                <button
+                  onClick={toggleMicListening}
+                  className={`p-2 sm:p-3 rounded-full transition-all shrink-0 relative ${
+                    isMicListening
+                      ? 'bg-red-500 text-white animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.6)]'
+                      : 'bg-[#00ffcc]/10 text-[#00ffcc] hover:bg-[#00ffcc]/20 border border-[#00ffcc]/30'
+                  }`}
+                  title={isMicListening ? "सुन रहे हैं... बंद करने के लिए क्लिक करें" : "बोलकर टाइप करें (Voice Input)"}
+                >
+                  {isMicListening ? <MicOff size={18} className="sm:w-5 sm:h-5" /> : <Mic size={18} className="sm:w-5 sm:h-5" />}
+                  {isMicListening && (
+                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                  )}
+                </button>
 
-              {/* Realtime Live Phone Call Button */}
-              <button 
-                onClick={toggleLiveVoice}
-                className={`p-3 rounded-full transition-colors shrink-0 ${
-                  isLiveActive 
-                    ? 'bg-red-500 text-white animate-pulse' 
-                    : 'bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 border border-indigo-500/30'
-                }`}
-                title="लाइव कॉल (Voice Call Mode)"
-              >
-                {isLiveActive ? <PhoneOff size={20} /> : <Phone size={20} />}
-              </button>
+                {/* Realtime Live Phone Call Button */}
+                <button
+                  onClick={toggleLiveVoice}
+                  className={`p-2 sm:p-3 rounded-full transition-colors shrink-0 ${
+                    isLiveActive
+                      ? 'bg-red-500 text-white animate-pulse'
+                      : 'bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 border border-indigo-500/30'
+                  }`}
+                  title="लाइव कॉल (Voice Call Mode)"
+                >
+                  {isLiveActive ? <PhoneOff size={18} className="sm:w-5 sm:h-5" /> : <Phone size={18} className="sm:w-5 sm:h-5" />}
+                </button>
+              </div>
 
               <textarea
                 value={input}
@@ -1804,18 +1827,18 @@ Based on my score, please provide a brief analysis of my performance, my experie
                     : "ज्योति से बोलकर या लिखकर पूछें..."
                 }
                 disabled={isLiveActive}
-                className="w-full bg-transparent border-none focus:outline-none resize-none max-h-32 py-3 px-2 placeholder:opacity-50 text-[#e3e3e3]"
+                className="w-full bg-transparent border-none focus:outline-none resize-none max-h-32 py-2 sm:py-3 px-1 sm:px-2 placeholder:opacity-50 text-[#e3e3e3] text-sm sm:text-base"
                 rows={1}
-                style={{ minHeight: '44px' }}
+                style={{ minHeight: '40px' }}
               />
 
               <button 
                 id="send-btn"
                 onClick={() => handleSend()}
                 disabled={(!input.trim() && !attachedFile) || isProcessing || isLiveActive}
-                className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-30 text-[#00ffcc] rounded-full transition-colors shrink-0 mb-0.5 mr-0.5"
+                className="p-2 sm:p-3 bg-white/10 hover:bg-white/20 disabled:opacity-30 text-[#00ffcc] rounded-full transition-colors shrink-0 mb-0.5 sm:mb-0 mr-0.5"
               >
-                <Send size={18} />
+                <Send size={18} className="sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
